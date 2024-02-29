@@ -36,6 +36,7 @@ function buildKey(val) {
 
 function buildKeypad() {
     const KEYS = [
+        ['Clear'],
         ['7', '8', '9', '/'],
         ['4', '5', '6', '*'],
         ['1', '2', '3', '-'],
