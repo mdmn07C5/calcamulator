@@ -1,0 +1,39 @@
+#container {
+    display: flex;
+    justify-content: center;
+    border: 1px dotted grey;
+}
+
+#calculator {
+    display: flex;
+    flex-direction: column;
+    width: 384px;
+    height: 512px;
+    border: 1px solid black;
+    padding: 16px;
+}
+
+#display {
+    display: flex;
+    background-color: darkslategray;
+    color: aliceblue;
+    font-size: 32px;
+    height: 64px;
+    justify-content: right;
+    align-items: end;
+    padding: 2px;
+}
+
+#keypad {
+    display: flex;
+    flex-direction: column;
+}
+
+.keypad-row {
+    display: flex;
+}
+
+.key-button {
+    flex-grow: 1;
+    font-size: x-large;
+}
