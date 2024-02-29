@@ -14,10 +14,22 @@ function divide(a, b) {
     return a / b;
 }
 
+const operations = {
+    '+': add,
+    '-': subtract,
+    '*': multiply,
+    '/': divide,
+}
+
+function operate(operator, operandA, operandB) {
+    return operations[operator](operandA, operandB);
+}
+
 function buildKey(val) {
     const key = document.createElement('button');
     key.setAttribute('id', `key-${val}`);
     key.setAttribute('class', 'key-button');
+    key.setAttribute('value', val);
     key.textContent = val;
     return key;
 }
