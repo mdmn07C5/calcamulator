@@ -31,6 +31,7 @@ function buildKey(val) {
     key.setAttribute('class', 'key-button');
     key.setAttribute('value', val);
     key.textContent = val;
+    key.addEventListener('click', () => handleInput(val))
     return key;
 }
 
@@ -55,5 +56,20 @@ function buildKeypad() {
         keypad.appendChild(keypadRow);
     })
 }
+
+function updateDisplay(value) {
+    const display = document.querySelector('#display');
+    if (display.textContent === '0') {
+        display.textContent = value;
+    } else {
+        display.textContent += value;
+    }
+}
+
+
+function handleInput(input) {
+    updateDisplay(input);
+}
+
 
 buildKeypad();
