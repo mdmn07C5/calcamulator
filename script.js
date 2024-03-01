@@ -52,6 +52,7 @@ function buildKey(val) {
     key.setAttribute('class', 'key-button');
     key.setAttribute('value', val);
     key.textContent = val;
+    key.addEventListener('click', () => handleInput(val));
     return key;
 }
 
