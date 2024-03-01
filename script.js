@@ -13,30 +13,42 @@ const calc = {
     },
 
     pushNum(num) {
+        if (this.opStack.length === 0) {    // likely after a '=' keypress
+            this.numStack.pop();
+        }
         this.numStack.push(Number.parseFloat(num));
-        return this.numStack.at(-1);
     },
 
+    pushOp(op) {
+        this.opStack.push(op);
+    }, 
+
     evaluate(op) {
-        if (op === '=') {
-            const operandB = this.numStack.pop();
-            const operandA = this.numStack.pop();
-
-            if (!operandB) {
-                if (!operandA) {
-                    return 0;
+        switch (this.numStack.length) {
+            case 0:
+                return 0;
+            case 1:
+                if (op === '=') {
+                    return this.numStack.at(-1);
+                } else {
+                    this.opStack.pop() // replace current operation
+                    this.pushOp(op);
+                    return this.numStack.at(-1);
                 }
-                return operandA;
-            }
+            case 2:
+                const operator = this.opStack.pop();
+                const B = this.numStack.pop();
+                const A = this.numStack.pop();
+                const result = this.operate(operator, A, B);
+                this.pushNum(result);
+                if (op !== '=') {
+                    this.pushOp(op);
+                }
+                return result
 
-            const result = this.operate(this.opStack.pop(), operandA, operandB);
-            this.numStack.push(result)
-        } else {
-            this.opStack.push(op);
-            return null
+            default:
+                return "oh shit wtf happened";
         }
-
-        return this.numStack.at(-1);
     },
 
     reset() {
@@ -96,18 +108,7 @@ const display = {
 }
 
 function handleInput(input) {
-    if (!isNaN(input)) {
-        display.update(input);
-    } else {
-        const val = display.value;
-        calc.pushNum(val);
-        const result = calc.evaluate(input);
-        if (result) {
-            display.override(result);
-        } else {
-            display.reset();
-        }
-    }
+    
 }
 
 buildKeypad();
