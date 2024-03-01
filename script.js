@@ -21,6 +21,14 @@ const calc = {
         if (op === '=') {
             const operandA = this.numStack.pop();
             const operandB = this.numStack.pop();
+
+            if (!operandB) {
+                if (!operandA) {
+                    return 0;
+                }
+                return operandA;
+            }
+
             const result = this.operate(this.opStack.pop(), operandA, operandB);
             this.numStack.push(result)
         } else {
