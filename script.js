@@ -1,29 +1,42 @@
-function add(a, b) {
-    return a + b;
-}
+const calc = {
+    operations : {
+        '+': (a, b) => a + b,
+        '-': (a, b) => a - b,
+        '*': (a, b) => a * b,
+        '/': (a, b) => a / b,
+    }, 
+    numStack : [],
+    opStack : [],
 
-function subtract(a, b) {
-    return a - b;
-}
+    operate(operator, operandA, operandB) {
+        return this.operations[operator](operandA, operandB);
+    },
 
-function multiply(a, b) {
-    return a * b;
-}
+    pushNum(num) {
+        this.numStack.push(Number.parseFloat(num));
+        return this.numStack.at(-1);
+    },
 
-function divide(a, b) {
-    return a / b;
-}
+    evaluate(op) {
+        if (op === '=') {
+            const operandA = this.numStack.pop();
+            const operandB = this.numStack.pop();
+            const result = this.operate(this.opStack.pop(), operandA, operandB);
+            this.numStack.push(result)
+        } else {
+            this.opStack.push(op);
+            return null
+        }
 
-const operations = {
-    '+': add,
-    '-': subtract,
-    '*': multiply,
-    '/': divide,
-}
+        return this.numStack.at(-1);
+    },
 
-function operate(operator, operandA, operandB) {
-    return operations[operator](operandA, operandB);
-}
+    reset() {
+        this.numStack = [];
+        this.opStack = [];
+        console.log(this.numStack, this.opStack)
+    }
+};
 
 function buildKey(val) {
     const key = document.createElement('button');
@@ -36,10 +49,11 @@ function buildKey(val) {
 
 function buildKeypad() {
     const KEYS = [
-        ['7', '8', '9', '/'],
-        ['4', '5', '6', '*'],
-        ['1', '2', '3', '-'],
-        ['0', '.', '(-)', '=']
+        ['AC', '+/-', '/'],
+        ['7', '8', '9', '*'],
+        ['4', '5', '6', '-'],
+        ['1', '2', '3', '+'],
+        ['0', '.', '=']
     ]
 
     const keypad = document.querySelector('#keypad');
@@ -55,4 +69,42 @@ function buildKeypad() {
     })
 }
 
+const display = {
+    display: document.querySelector('#display'),
+    value: '',
+    override(val) {
+        this.display.textContent = val;
+        this.value = val;
+    },
+    reset() {
+        this.display.textContent = '';
+        this.value = '';
+    },
+    update(val) {
+        this.display.textContent += val;
+        this.value += val;
+    },
+}
+
+function handleInput(input) {
+    if (!isNaN(input)) {
+        display.update(input);
+    } else {
+        const val = display.value;
+        calc.pushNum(val);
+        const result = calc.evaluate(input);
+        if (result) {
+            display.override(result);
+        } else {
+            display.reset();
+        }
+    }
+}
+
 buildKeypad();
+
+const clearButton = document.querySelector('#key-AC');
+clearButton.addEventListener('click', () => {
+    display.reset();
+    calc.reset();   
+});
