@@ -19,8 +19,8 @@ const calc = {
 
     evaluate(op) {
         if (op === '=') {
-            const operandA = this.numStack.pop();
             const operandB = this.numStack.pop();
+            const operandA = this.numStack.pop();
 
             if (!operandB) {
                 if (!operandA) {
