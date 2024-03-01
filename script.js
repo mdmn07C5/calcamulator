@@ -21,6 +21,14 @@ const calc = {
         if (op === '=') {
             const operandA = this.numStack.pop();
             const operandB = this.numStack.pop();
+
+            if (!operandB) {
+                if (!operandA) {
+                    return 0;
+                }
+                return operandA;
+            }
+
             const result = this.operate(this.opStack.pop(), operandA, operandB);
             this.numStack.push(result)
         } else {
@@ -44,7 +52,7 @@ function buildKey(val) {
     key.setAttribute('class', 'key-button');
     key.setAttribute('value', val);
     key.textContent = val;
-    key.addEventListener('click', () => handleInput(val))
+    key.addEventListener('click', () => handleInput(val));
     return key;
 }
 
