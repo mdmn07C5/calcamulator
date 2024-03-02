@@ -1,9 +1,12 @@
+const PRECISION = 6; // fit number within 10 symbols including ., e, +, and n
+const MAX_LEN = 9
+
 const calc = {
     operations : {
         '+': (a, b) => a + b,
         '-': (a, b) => a - b,
         '*': (a, b) => a * b,
-        '/': (a, b) => a / b,
+        '/': (a, b) => b === 0 ? 'lole' : a / b,
     }, 
     numStack : [],
     opStack : [],
@@ -29,7 +32,6 @@ const calc = {
             case 0:
                 return 0;
             case 1:
-                console.log(this.numStack);
                 if (op === '=') {
                     return this.numStack.at(-1);
                 } else {
@@ -42,7 +44,6 @@ const calc = {
                 const B = this.numStack.pop();
                 const A = this.numStack.pop();
                 const result = this.operate(operator, A, B);
-                console.log(result, operator, A, B)
                 this.pushNum(result);
                 if (op !== '=') {
                     this.pushOp(op);
@@ -106,8 +107,34 @@ const display = {
         this.display.textContent = '';
     },
     updateDisplayValue(value) {
-        this.display.textContent = value;
+        if (isNaN(value)) {
+            this.display.textContent = value;
+        } else {
+            this.display.textContent = formatNum(value);
+        }
     },
+}
+
+function formatNum(num) {
+    if (typeof num === 'number') {
+        num = num.toString();
+    }
+
+    if (num.includes('e')) {
+        const parts = num.split('e')
+        const integerLength = parts[0].search('\\.')
+        const decimal = parseFloat(parts[0])
+        const allowance = MAX_LEN - integerLength - parts[1].length - 1
+        return decimal.toFixed(allowance) + 'e' + parts[1];
+    }
+
+    if (num.includes('.')) {
+        const parts = num.split('.');
+        const intLength = parts[0].length;
+        return parseFloat(num).toFixed(MAX_LEN - intLength);
+    }
+    
+    return num; // probably an integer
 }
 
 function handleInput(input) {
@@ -122,7 +149,7 @@ function handleInput(input) {
         
         calc.pushNum(value);
         const result = calc.evaluate(input);
-        
+        console.log(result);
         display.updateDisplayValue(result);
         display.resetValue();
     }
@@ -135,3 +162,6 @@ clearButton.addEventListener('click', () => {
     display.resetDisplayText();
     calc.reset();   
 });
+
+
+console.log()
