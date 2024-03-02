@@ -113,7 +113,9 @@ const display = {
 function handleInput(input) {
     display.resetDisplayText();
     if (!isNaN(input)) {
-        display.appendValue(input);
+        if (display.value.length < 10) {
+            display.appendValue(input);
+        }
         display.updateDisplayValue(display.value);
     } else {
         const value = display.value;
