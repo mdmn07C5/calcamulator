@@ -7,6 +7,8 @@ const calc = {
         '-': (a, b) => a - b,
         '*': (a, b) => a * b,
         '/': (a, b) => b === 0 ? 'lole' : a / b,
+        '±': (a) => a * -1,
+        '=': (a) => a
     }, 
     numStack : [],
     opStack : [],
@@ -137,24 +139,54 @@ function formatNum(num) {
 
 function handleInput(input) {
     display.resetDisplayText();
-    if (!isNaN(input) || input === '.') {
-        if (input === '.' && !display.value.includes('.')) {
-            display.appendValue(input);
-        } else {
-            display.appendValue(input);
-        }
-        display.updateDisplayValue(display.value);
-    } else {
-        const value = display.value;
+    switch (true) {
         
-        calc.pushNum(value);
-        let result = calc.evaluate(input);
+        case (input in calc.operations):
+            const value = display.value;
+        
+            calc.pushNum(value);
+            let result = calc.evaluate(input);
 
-        result = isNaN(result) ? result : formatNum(result);
+            result = isNaN(result) ? result : formatNum(result);
 
-        display.updateDisplayValue(result);
-        display.resetValue();
+            display.updateDisplayValue(result);
+            display.resetValue();
+            
+            break;
+
+        case (input === '.'):
+            if (!display.value.includes('.')) {
+                display.appendValue(input)
+            }
+            break;
+
+            
+        default:
+            display.appendValue(input);
+            display.updateDisplayValue(display.value);
+
     }
+
+
+
+    // if (!isNaN(input) || input === '.') {
+    //     if (input === '.' && !display.value.includes('.')) {
+    //         display.appendValue(input);
+    //     } else {
+    //         display.appendValue(input);
+    //     }
+    //     display.updateDisplayValue(display.value);
+    // } else {
+    //     const value = display.value;
+        
+    //     calc.pushNum(value);
+    //     let result = calc.evaluate(input);
+
+    //     result = isNaN(result) ? result : formatNum(result);
+
+    //     display.updateDisplayValue(result);
+    //     display.resetValue();
+    // }
 }
 
 buildKeypad();
@@ -162,5 +194,8 @@ buildKeypad();
 const clearButton = document.querySelector('#key-AC');
 clearButton.addEventListener('click', () => {
     display.resetDisplayText();
+    display.resetValue();
     calc.reset();   
 });
+
+console.log(calc.operate('±', 8, 6, 56, 12321));
