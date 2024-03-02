@@ -1,4 +1,3 @@
-const PRECISION = 6; // fit number within 10 symbols including ., e, +, and n
 const MAX_LEN = 9
 
 const calc = {
@@ -7,8 +6,8 @@ const calc = {
         '-': (a, b) => a - b,
         '*': (a, b) => a * b,
         '/': (a, b) => b === 0 ? 'lole' : a / b,
-        '±': (a) => a * -1,
-        '=': (a) => a
+        '±': (a) => -a,
+        '=': (a) => a // never called, added here for input handling condition
     }, 
     numStack : [],
     opStack : [],
@@ -34,13 +33,15 @@ const calc = {
             case 0:
                 return 0;
             case 1:
-                if (op === '=') {
-                    return this.numStack.at(-1);
+                if (op === '=') return this.numStack.at(-1);
+                if (op === '±') {
+                    const A = this.numStack.pop();
+                    this.numStack.push(this.operate(op, A));
                 } else {
                     this.opStack.pop() // replace current operation
                     this.pushOp(op);
-                    return this.numStack.at(-1);
                 }
+                return this.numStack.at(-1); 
             case 2:
                 const operator = this.opStack.pop();
                 const B = this.numStack.pop();
