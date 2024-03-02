@@ -98,7 +98,9 @@ const display = {
     display: document.querySelector('#display'),
     value: '',
     appendValue(val) {
-        this.value += val;
+        if (this.value.length < 10) {
+            this.value += val;
+        }
     },
     resetValue() {
         this.value = '';
@@ -107,11 +109,7 @@ const display = {
         this.display.textContent = '';
     },
     updateDisplayValue(value) {
-        if (isNaN(value)) {
-            this.display.textContent = value;
-        } else {
-            this.display.textContent = formatNum(value);
-        }
+        this.display.textContent = value;
     },
 }
 
@@ -122,9 +120,9 @@ function formatNum(num) {
 
     if (num.includes('e')) {
         const parts = num.split('e')
-        const integerLength = parts[0].search('\\.')
+        const intLength = parts[0].search('\\.')
         const decimal = parseFloat(parts[0])
-        const allowance = MAX_LEN - integerLength - parts[1].length - 1
+        const allowance = MAX_LEN - intLength - parts[1].length - 1
         return decimal.toFixed(allowance) + 'e' + parts[1];
     }
 
@@ -139,8 +137,10 @@ function formatNum(num) {
 
 function handleInput(input) {
     display.resetDisplayText();
-    if (!isNaN(input)) {
-        if (display.value.length < 10) {
+    if (!isNaN(input) || input === '.') {
+        if (input === '.' && !display.value.includes('.')) {
+            display.appendValue(input);
+        } else {
             display.appendValue(input);
         }
         display.updateDisplayValue(display.value);
@@ -148,8 +148,10 @@ function handleInput(input) {
         const value = display.value;
         
         calc.pushNum(value);
-        const result = calc.evaluate(input);
-        console.log(result);
+        let result = calc.evaluate(input);
+
+        result = isNaN(result) ? result : formatNum(result);
+
         display.updateDisplayValue(result);
         display.resetValue();
     }
@@ -162,6 +164,3 @@ clearButton.addEventListener('click', () => {
     display.resetDisplayText();
     calc.reset();   
 });
-
-
-console.log()
