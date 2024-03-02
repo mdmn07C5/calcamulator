@@ -13,6 +13,7 @@ const calc = {
     },
 
     pushNum(num) {
+        if (isNaN(Number.parseFloat(num))) return;
         if (this.opStack.length === 0) {    // likely after a '=' keypress
             this.numStack.pop();
         }
@@ -28,6 +29,7 @@ const calc = {
             case 0:
                 return 0;
             case 1:
+                console.log(this.numStack);
                 if (op === '=') {
                     return this.numStack.at(-1);
                 } else {
@@ -40,6 +42,7 @@ const calc = {
                 const B = this.numStack.pop();
                 const A = this.numStack.pop();
                 const result = this.operate(operator, A, B);
+                console.log(result, operator, A, B)
                 this.pushNum(result);
                 if (op !== '=') {
                     this.pushOp(op);
@@ -70,7 +73,7 @@ function buildKey(val) {
 
 function buildKeypad() {
     const KEYS = [
-        ['AC', '+/-', '/'],
+        ['AC', '±', '/'],
         ['7', '8', '9', '*'],
         ['4', '5', '6', '-'],
         ['1', '2', '3', '+'],
@@ -93,28 +96,40 @@ function buildKeypad() {
 const display = {
     display: document.querySelector('#display'),
     value: '',
-    override(val) {
-        this.display.textContent = val;
-        this.value = val;
+    appendValue(val) {
+        this.value += val;
     },
-    reset() {
-        this.display.textContent = '';
+    resetValue() {
         this.value = '';
     },
-    update(val) {
-        this.display.textContent += val;
-        this.value += val;
+    resetDisplayText() {
+        this.display.textContent = '';
+    },
+    updateDisplayValue(value) {
+        this.display.textContent = value;
     },
 }
 
 function handleInput(input) {
-    
+    display.resetDisplayText();
+    if (!isNaN(input)) {
+        display.appendValue(input);
+        display.updateDisplayValue(display.value);
+    } else {
+        const value = display.value;
+        
+        calc.pushNum(value);
+        const result = calc.evaluate(input);
+        
+        display.updateDisplayValue(result);
+        display.resetValue();
+    }
 }
 
 buildKeypad();
 
 const clearButton = document.querySelector('#key-AC');
 clearButton.addEventListener('click', () => {
-    display.reset();
+    display.resetDisplayText();
     calc.reset();   
 });
