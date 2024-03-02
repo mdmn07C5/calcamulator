@@ -76,7 +76,7 @@ function buildKey(val) {
 
 function buildKeypad() {
     const KEYS = [
-        ['AC', '±', '/'],
+        ['AC', '±', 'DEL', '/'],
         ['7', '8', '9', '*'],
         ['4', '5', '6', '-'],
         ['1', '2', '3', '+'],
@@ -113,6 +113,9 @@ const display = {
     updateDisplayValue(value) {
         this.display.textContent = value;
     },
+    popValue() {
+        this.value = this.value.slice(0, -1);
+    }
 }
 
 function formatNum(num) {
@@ -160,14 +163,16 @@ function handleInput(input) {
             }
             break;
 
-            
+        case (input === 'DEL'):
+            display.popValue();
+            display.updateDisplayValue(display.value);
+            break;
+
         default:
             display.appendValue(input);
             display.updateDisplayValue(display.value);
 
     }
-
-
 
     // if (!isNaN(input) || input === '.') {
     //     if (input === '.' && !display.value.includes('.')) {
@@ -197,5 +202,3 @@ clearButton.addEventListener('click', () => {
     display.resetValue();
     calc.reset();   
 });
-
-console.log(calc.operate('±', 8, 6, 56, 12321));
