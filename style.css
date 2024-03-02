@@ -1,39 +1,77 @@
-#container {
-    display: flex;
-    justify-content: center;
-    border: 1px dotted grey;
-}
-
-#calculator {
-    display: flex;
-    flex-direction: column;
-    width: 384px;
-    height: 512px;
-    border: 1px solid black;
-    padding: 16px;
-}
-
-#display {
-    display: flex;
-    background-color: darkslategray;
-    color: aliceblue;
-    font-size: 32px;
-    height: 64px;
-    justify-content: right;
-    align-items: end;
-    padding: 2px;
-}
-
-#keypad {
-    display: flex;
-    flex-direction: column;
-}
-
+body,
+#container,
+#calculator,
+#display-container,
+#keypad,
 .keypad-row {
     display: flex;
 }
 
-.key-button {
+body,
+#calculator,
+#keypad {
+    flex-direction: column;
+}
+
+#keypad,
+.keypad-row {
+    gap: 5px;
     flex-grow: 1;
-    font-size: x-large;
+}
+
+body {
+    justify-content: center;
+    align-items: center;
+    font-family: monospace;
+    height: 100vh;
+}
+
+#calculator {
+    width: 384px;
+    height: 500px;
+    border-radius: 5px;
+    padding: 16px;
+    gap: 5px;
+    background-color: darkslateblue;
+}
+
+#display-container {
+    background-color: darkslategray;
+    color: aliceblue;
+    font-size: 64px;
+    height: 90px;
+    align-items: center;
+    justify-content: right;
+    padding-right: 5px;
+    border: 2px solid black;
+}
+
+.key-button {
+    font-size: 32px;
+    border: 1px solid darkgray;
+    border-radius: 5px;
+    padding: 5px;
+    flex: 1 1 0px;
+    background-color: aliceblue;
+}
+
+.key-button:active {
+    filter: brightness(50%);
+}
+
+.key-numeric {
+    background-color: thistle;
+}
+
+.key-operation {
+    background-color: lightsalmon;
+}
+
+#key-0 {
+    flex-grow: 2.2;
+}
+
+#key-AC,
+#key-DEL {
+    background-color: lightblue;
 }

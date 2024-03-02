@@ -61,7 +61,6 @@ const calc = {
     reset() {
         this.numStack = [];
         this.opStack = [];
-        console.log(this.numStack, this.opStack)
     }
 };
 
@@ -69,7 +68,12 @@ function buildKey(val) {
     const key = document.createElement('button');
     key.setAttribute('id', `key-${val}`);
     key.setAttribute('class', 'key-button');
-    key.setAttribute('value', val);
+    if (!isNaN(val)) {
+        key.setAttribute('class', 'key-button key-numeric');
+    }
+    if ('+/-*='.includes(val)) {
+        key.setAttribute('class', 'key-button key-operation');
+    }
     key.textContent = val;
     key.addEventListener('click', () => handleInput(val));
     return key;
@@ -138,7 +142,13 @@ function formatNum(num) {
         return parseFloat(num).toFixed(MAX_LEN - intLength);
     }
     
-    return num; // probably an integer
+    // probably an integer
+    if (num.length > MAX_LEN) {
+        return parseFloat(num).toExponential(MAX_LEN - 5); 
+        // 5 is to account for 'e' '+/-' '.' and up to 2 digit exponents
+    }
+
+    return num; 
 }
 
 function handleInput(input) {
@@ -161,6 +171,7 @@ function handleInput(input) {
         case (input === '.'):
             if (!display.value.includes('.')) {
                 display.appendValue(input)
+                display.updateDisplayValue(display.value);
             }
             break;
 
